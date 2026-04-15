@@ -6,6 +6,8 @@ It is meant for fast self-hosted testing when you want to layer a patch set on t
 
 `remove_routing_patch.sh` removes the entries listed in `remove_patch.txt` by rebuilding the patched workspace with those entries excluded, then syncing the resulting delta into the container.
 
+The removal script defaults to `upstream/v4.x` as its reset base, so it removes only the patches you list and does not move the workspace to `next`. Override with `BASE_REF=...` if you need a different reset branch.
+
 ## What It Does
 
 The apply script now builds one aggregate git workspace instead of copying each PR directly into the container one at a time.

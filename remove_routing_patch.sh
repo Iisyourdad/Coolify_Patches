@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export GIT_PAGER="${GIT_PAGER:-cat}"
 
 UPSTREAM_URL="${UPSTREAM_URL:-https://github.com/coollabsio/coolify.git}"
-BASE_REF="${BASE_REF:-upstream/next}"
+BASE_REF="${BASE_REF:-upstream/v4.x}"
 
 CONTAINER="${CONTAINER:-coolify}"
 DEST_DIR="${DEST_DIR:-/var/www/html}"
