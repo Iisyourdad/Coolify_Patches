@@ -1,10 +1,10 @@
 # Routing Patch Helper
 
-`apply_routing_patch.sh` applies one or more GitHub PRs or branch URLs into a running Coolify container without rebuilding the image.
+`apply_patch.sh` applies one or more GitHub PRs or branch URLs into a running Coolify container without rebuilding the image.
 
 It is meant for fast self-hosted testing when you want to layer a patch set on top of an existing Coolify install and validate the result quickly.
 
-`remove_routing_patch.sh` removes the entries listed in `remove_patch.txt` by rebuilding the patched workspace with those entries excluded, then syncing the resulting delta into the container.
+`remove_patch.sh` removes the entries listed in `remove_patch.txt` by rebuilding the patched workspace with those entries excluded, then syncing the resulting delta into the container.
 
 The removal script defaults to `upstream/v4.x` as its reset base, so it removes only the patches you list and does not move the workspace to `next`. Override with `BASE_REF=...` if you need a different reset branch.
 
@@ -75,15 +75,15 @@ If you are not using `DRY_RUN=true`, the target container must already exist.
 From this directory:
 
 ```bash
-chmod +x apply_routing_patch.sh
-./apply_routing_patch.sh
+chmod +x apply_patch.sh
+./apply_patch.sh
 ```
 
 To remove selected patches:
 
 ```bash
-chmod +x remove_routing_patch.sh
-./remove_routing_patch.sh
+chmod +x remove_patch.sh
+./remove_patch.sh
 ```
 
 By default it reads `patches.txt` from the same directory as the script, patches the `coolify` container, clears caches, runs migrations only when migration files changed, and then restarts the container.
@@ -93,67 +93,67 @@ By default it reads `patches.txt` from the same directory as the script, patches
 Preview the combined patch set without touching the container:
 
 ```bash
-DRY_RUN=true ./apply_routing_patch.sh
+DRY_RUN=true ./apply_patch.sh
 ```
 
 Patch a different container:
 
 ```bash
-CONTAINER=my-coolify ./apply_routing_patch.sh
+CONTAINER=my-coolify ./apply_patch.sh
 ```
 
 Use a different patch list:
 
 ```bash
-PATCHES_FILE=/path/to/patches.txt ./apply_routing_patch.sh
+PATCHES_FILE=/path/to/patches.txt ./apply_patch.sh
 ```
 
 Use a different removal list:
 
 ```bash
-REMOVE_PATCHES_FILE=/path/to/remove_patch.txt ./remove_routing_patch.sh
+REMOVE_PATCHES_FILE=/path/to/remove_patch.txt ./remove_patch.sh
 ```
 
 Use a different base ref:
 
 ```bash
-BASE_REF=upstream/main ./apply_routing_patch.sh
+BASE_REF=upstream/main ./apply_patch.sh
 ```
 
 Skip the restart:
 
 ```bash
-RESTART_CONTAINER=false ./apply_routing_patch.sh
+RESTART_CONTAINER=false ./apply_patch.sh
 ```
 
 Disable cache clear:
 
 ```bash
-CLEAR_CACHE=false ./apply_routing_patch.sh
+CLEAR_CACHE=false ./apply_patch.sh
 ```
 
 Always run migrations:
 
 ```bash
-RUN_MIGRATIONS=true ./apply_routing_patch.sh
+RUN_MIGRATIONS=true ./apply_patch.sh
 ```
 
 Never run migrations:
 
 ```bash
-RUN_MIGRATIONS=false ./apply_routing_patch.sh
+RUN_MIGRATIONS=false ./apply_patch.sh
 ```
 
 Run an extra command inside the container after syncing files:
 
 ```bash
-POST_APPLY_COMMAND='php artisan queue:restart' ./apply_routing_patch.sh
+POST_APPLY_COMMAND='php artisan queue:restart' ./apply_patch.sh
 ```
 
 Keep the temp workspace even on success:
 
 ```bash
-KEEP_WORKDIR=true ./apply_routing_patch.sh
+KEEP_WORKDIR=true ./apply_patch.sh
 ```
 
 ## Environment Variables
@@ -161,7 +161,7 @@ KEEP_WORKDIR=true ./apply_routing_patch.sh
 - `UPSTREAM_URL`: upstream repo to clone and compare against
 - `BASE_REF`: base ref used for diffs, default `upstream/next`
 - `PATCHES_FILE`: patch source list, default is the local `patches.txt`
-- `REMOVE_PATCHES_FILE`: removal list used by `remove_routing_patch.sh`, default is the local `remove_patch.txt`
+- `REMOVE_PATCHES_FILE`: removal list used by `remove_patch.sh`, default is the local `remove_patch.txt`
 - `CONTAINER`: target Docker container name, default `coolify`
 - `DEST_DIR`: destination path inside the container, default `/var/www/html`
 - `RESTART_CONTAINER`: `true` or `false`
