@@ -1,0 +1,4 @@
+# List the patches to remove, one per line.
+# Use the same supported formats as patches.txt:
+# https://github.com/<owner>/<repo>/pull/<number>
+# https://github.com/<owner>/<repo>/tree/<branch>

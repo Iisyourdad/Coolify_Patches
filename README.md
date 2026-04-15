@@ -4,9 +4,11 @@
 
 It is meant for fast self-hosted testing when you want to layer a patch set on top of an existing Coolify install and validate the result quickly.
 
+`remove_routing_patch.sh` removes the entries listed in `remove_patch.txt` by rebuilding the patched workspace with those entries excluded, then syncing the resulting delta into the container.
+
 ## What It Does
 
-The script now builds one aggregate git workspace instead of copying each PR directly into the container one at a time.
+The apply script now builds one aggregate git workspace instead of copying each PR directly into the container one at a time.
 
 That means it will:
 
@@ -29,6 +31,8 @@ Each non-empty, non-comment line in `patches.txt` must be one of these:
 
 - `https://github.com/<owner>/<repo>/pull/<number>`
 - `https://github.com/<owner>/<repo>/tree/<branch>`
+
+`remove_patch.txt` uses the same formats, but it is interpreted as the subset of `patches.txt` to remove.
 
 The included `patches.txt` currently points at:
 
@@ -71,6 +75,13 @@ chmod +x apply_routing_patch.sh
 ./apply_routing_patch.sh
 ```
 
+To remove selected patches:
+
+```bash
+chmod +x remove_routing_patch.sh
+./remove_routing_patch.sh
+```
+
 By default it reads `patches.txt` from the same directory as the script, patches the `coolify` container, clears caches, runs migrations only when migration files changed, and then restarts the container.
 
 ## Common Examples
@@ -91,6 +102,12 @@ Use a different patch list:
 
 ```bash
 PATCHES_FILE=/path/to/patches.txt ./apply_routing_patch.sh
+```
+
+Use a different removal list:
+
+```bash
+REMOVE_PATCHES_FILE=/path/to/remove_patch.txt ./remove_routing_patch.sh
 ```
 
 Use a different base ref:
@@ -140,6 +157,7 @@ KEEP_WORKDIR=true ./apply_routing_patch.sh
 - `UPSTREAM_URL`: upstream repo to clone and compare against
 - `BASE_REF`: base ref used for diffs, default `upstream/next`
 - `PATCHES_FILE`: patch source list, default is the local `patches.txt`
+- `REMOVE_PATCHES_FILE`: removal list used by `remove_routing_patch.sh`, default is the local `remove_patch.txt`
 - `CONTAINER`: target Docker container name, default `coolify`
 - `DEST_DIR`: destination path inside the container, default `/var/www/html`
 - `RESTART_CONTAINER`: `true` or `false`
